@@ -38,6 +38,7 @@ class Login extends CI_Controller {
 		$this->session->unset_userdata('username');
 		$this->session->unset_userdata('logged_in');
 		$this->session->unset_userdata('akses');
+		$this->session->sess_destroy();
 		$this->session->set_flashdata('alert','Berhasil Logout!');
 		redirect('login','refresh');
 	}

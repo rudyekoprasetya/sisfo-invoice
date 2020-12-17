@@ -27,10 +27,10 @@
           	<thead>
           		<tr>
           			<th>No</th>
+          			<th>Invoice</th>
           			<th>To</th>
           			<th>Date</th>
           			<th>Desc</th>
-          			<th>Payment Due Date</th>
           			<th>Status</th>
           			<th>Act</th>	
           		</tr>
@@ -43,10 +43,10 @@ $no++;
 ?>
           		<tr>
           			<td><?= $no; ?></td>
+          			<td><?= $row->no_invoice;?></td>
           			<td><?= $row->kepada;?></td>
           			<td><?= $row->date;?></td>
           			<td><?= $row->payment_type;?></td>
-          			<td><?= $row->due_date;?></td>
           			<td><?php 
           			if($row->is_paid=='yes') {
           				echo "PAID";
@@ -107,7 +107,7 @@ $no++;
 	function ProjectID() {
 		let kepada=$('#kepada').val();
 		let num=Math.floor((Math.random() * 100) + 1);
-		let kode_project=kepada.substring(0,4).trim().toUpperCase()+num.toString();
+		let kode_project=kepada.substring(0,5).trim().toUpperCase()+num.toString();
 		// console.log(kode_project);
 		$('#kode_project').val(kode_project);
 	}
