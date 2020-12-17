@@ -11,12 +11,13 @@ class Invoice extends CI_Controller {
 
 	public function index() {
 		$data['judul']="Generate Invoice";
+		$id_user=$this->session->userdata('id_user');
 		$no_urut=$this->autoid();
 		$bulan=date('m');
 		$tahun=date('Y');
 		$roman=$this->numberToRoman($bulan);
 		$data['no_urut']=$no_urut;
-		$data['invoice']=$this->Model_ci->get_all_order('tb_invoice','no_urut','DESC');
+		$data['invoice']=$this->Model_ci->get_where_order('tb_invoice','no_urut','DESC',array('id_user'=>$id_user));
 		$data['no_invoice']=$no_urut."/DIV-IT/".$roman."/".$tahun;
 		$this->template->display('create_invoice',$data);
 	}

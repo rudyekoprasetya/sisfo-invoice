@@ -9,6 +9,7 @@ class Model_ci extends CI_Model {
 	public function cek($user,$pass) { 
 		 $this->db->where('username',$user);
 		 $this->db->where('password',$pass);
+		 $this->db->where('is_aktif','yes');
 		 $data=$this->db->get('tb_user');
 		 if ($data->num_rows() > 0) {
 		 	return TRUE;		
@@ -17,9 +18,9 @@ class Model_ci extends CI_Model {
 		 }
 	}
 
-	public function get_all_order($table,$field,$option) {
+	public function get_where_order($table,$field,$option,$where) {
 		$this->db->order_by($field, $option);
-		return $this->db->get($table);
+		return $this->db->get_where($table,$where);
 	}
 
 
