@@ -49,12 +49,12 @@ $no++;
           			<td><?= $row->payment_type;?></td>
           			<td><?php 
           			if($row->is_paid=='yes') {
-          				echo "PAID";
+          				echo "<font color='green'>PAID</font>";
           			} else {
-          				echo "UNPAID";
+          				echo "<font color='red'>UNPAID</font>";
           			}
           			?></td>
-          			<td><a href="#" class="btn btn-info btn-small" data-toggle="modal" data-target="#myModalItem" onclick="Item('<?= $row->no_invoice; ?>')"><i class="fa fa-tags"></i></a> | <a href="#" class="btn btn-success btn-small"><i class="fa fa-print"></i></a> | <a href="#" class="btn btn-warning btn-small"><i class="fa fa-pencil"></i></a> | <a href="<?= site_url('invoice/delData/'.$row->no_urut); ?>" class="btn btn-danger btn-small" onclick="return confirm('Yakin Akan menghapus?')"><i class="fa fa-ban"></i></a></td>
+          			<td><a href="#" class="btn btn-info btn-small" data-toggle="modal" data-target="#myModalItem" onclick="Item('<?= $row->no_invoice; ?>')"><i class="fa fa-tags"></i></a> | <a href="#" class="btn btn-success btn-small"><i class="fa fa-print"></i></a> | <a href="#" class="btn btn-warning btn-small" data-toggle="modal" data-target="#myModalEdit" onclick="editData('<?= $row->no_invoice; ?>')"><i class="fa fa-pencil"></i></a> | <a href="<?= site_url('invoice/delData/'.$row->no_urut); ?>" class="btn btn-danger btn-small" onclick="return confirm('Yakin Akan menghapus?')"><i class="fa fa-ban"></i></a></td>
           		</tr>
 <?php } ?>
           	</tbody>
@@ -65,7 +65,7 @@ $no++;
 </div>
 
 
-<!-- Modal Edit data -->
+<!-- Modal Add data -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document" style="width: 80%;">
     <div class="modal-content">
@@ -87,6 +87,8 @@ $no++;
 		<input type="text" name="payment_type" class="form-control" id="payment_type" required>
 		<label>Payment Due Date</label>
 		<input type="date" name="due_date" class="form-control" id="due_date" required>	
+		<label>Note</label>
+		<textarea name="note" class="form-control" rows="3" id="note"></textarea>
 		<label>Payment Status</label>
 		<select name="is_paid" class="form-control" id="is_paid">
 			<option value="no">UNPAID</option>
@@ -101,7 +103,29 @@ $no++;
     </div>
   </div>
 </div>
-<!--END Modal Edit data -->
+<!--END Modal Add data -->
+
+<!-- Modal Edit invoice -->
+<div class="modal fade" id="myModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document" style="width: 80%;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Edit Invoice</h4>
+      </div>
+      <form method="POST" action="<?= site_url('invoice/updateData'); ?>">
+      <div class="modal-body" id="tempat-edit">
+
+      </div>
+      <div class='modal-footer'>
+        <button type='submit' class='btn btn-primary'>Update</button>
+        <button type='button' class='btn btn-default' data-dismiss='modal'>Tutup</button>
+	  </div>
+	  </form>
+  </div>
+ </div>
+</div>
+<!-- Modal Edit invoice -->
 
 <!-- modal item -->
 <div class="modal fade" id="myModalItem" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -169,6 +193,17 @@ $no++;
 		let kode_project=kepada.substring(0,5).trim().toUpperCase()+num.toString();
 		// console.log(kode_project);
 		$('#kode_project').val(kode_project);
+	}
+
+	function editData(id) {
+		$.ajax({
+			type: "POST",
+			url: "<?php echo site_url('invoice/editData'); ?>",
+			data: "no_invoice="+id,
+			success: function(data) {
+				$("#tempat-edit").html(data);
+			}
+		});
 	}
 
 	function delItem(id) {

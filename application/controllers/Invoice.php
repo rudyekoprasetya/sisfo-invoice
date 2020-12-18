@@ -32,10 +32,11 @@ class Invoice extends CI_Controller {
 			'due_date'=>$this->input->post('due_date',true),
 			'date'=>$this->input->post('date',true),
 			'kepada'=>$this->input->post('kepada',true),
+			'note'=>$this->input->post('note',true),
 			'is_paid'=>$this->input->post('is_paid',true)
 		);
 		$this->Model_ci->insert('tb_invoice',$data);
-		$this->session->set_flashdata('alert','Invoice Tersimpan!');
+		$this->session->set_flashdata('alert','Invoice Berhasil Tersimpan!');
 		redirect('invoice');
 	}
 
@@ -43,6 +44,56 @@ class Invoice extends CI_Controller {
 		$no_urut=$this->uri->segment(3);
 		$this->Model_ci->delete('tb_invoice',array('no_urut'=>$no_urut));
 		redirect('invoice');
+	}
+
+	public function updateData() {
+		$data=array(
+			'no_urut'=>$this->input->post('no_urut',true),
+			'kode_project'=>$this->input->post('kode_project',true),
+			'id_user'=>$this->session->userdata('id_user'),
+			'payment_type'=>$this->input->post('payment_type',true),
+			'due_date'=>$this->input->post('due_date',true),
+			'date'=>$this->input->post('date',true),
+			'kepada'=>$this->input->post('kepada',true),
+			'note'=>$this->input->post('note',true),
+			'is_paid'=>$this->input->post('is_paid',true)
+		);
+		$this->Model_ci->update('tb_invoice',$data,array('no_invoice'=>$this->input->post('no_invoice',true)));
+		$this->session->set_flashdata('alert','Invoice Berhasil Diubah!');
+		redirect('invoice');
+	}
+
+	public function editData() {
+		$no_invoice=$this->input->post('no_invoice',true);
+		$data=$this->Model_ci->get_where('tb_invoice',array('no_invoice'=>$no_invoice))->row();
+		if (!(strcmp($data->is_paid,"yes"))) {
+	      	$paid="selected";
+	      	$unpaid="";
+		} else {  
+		    $paid="";
+		    $unpaid="selected";
+		}
+		?>
+		<label>No Invoice</label>
+		<input type="text" class="form-control" id="no_invoice" name="no_invoice" value="<?= $data->no_invoice; ?>" readonly>		
+		<input type="hidden" name="no_urut" value="<?= $data->no_urut; ?>">
+		<label>To</label>
+		<input type="text" name="kepada" class="form-control" id="kepada" value="<?= $data->kepada; ?>" required>
+		<input type="hidden" name="kode_project" id="kode_project" value="<?= $data->kode_project; ?>">
+		<label>Date</label>
+		<input type="date" name="date" class="form-control" id="date" value="<?= $data->date; ?>" required>
+		<label>For Payment</label>
+		<input type="text" name="payment_type" class="form-control" id="payment_type" required value="<?= $data->payment_type; ?>">
+		<label>Payment Due Date</label>
+		<input type="date" name="due_date" class="form-control" id="due_date" required value="<?= $data->due_date; ?>">	
+		<label>Note</label>
+		<textarea name="note" class="form-control" rows="3" id="note"><?= $data->note; ?></textarea>
+		<label>Payment Status</label>
+		<select name="is_paid" class="form-control" id="is_paid">
+			<option value="no" <?= $unpaid; ?>>UNPAID</option>
+			<option value="yes" <?= $paid; ?>>PAID</option>
+		</select>
+		<?php
 	}
 
 	public function get_item() {
