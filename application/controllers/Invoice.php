@@ -39,6 +39,46 @@ class Invoice extends CI_Controller {
 		redirect('invoice');
 	}
 
+	public function delData() {
+		$no_urut=$this->uri->segment(3);
+		$this->Model_ci->delete('tb_invoice',array('no_urut'=>$no_urut));
+		redirect('invoice');
+	}
+
+	public function get_item() {
+		$no_invoice=$this->input->post('no_invoice',true);
+		$data=$this->Model_ci->get_where('tb_item',array('no_invoice'=>$no_invoice));
+		foreach ($data->result() as $row) {
+			?>
+<tr>
+	<td><button type="button" class="btn btn-danger btn-small" onclick="delItem('<?= $row->id; ?>')"><i class="fa fa-times"></i></button></td>
+	<td><?= $row->item; ?></td>
+	<td><?= $row->qty; ?></td>
+	<td><?= number_format($row->price); ?></td>
+	<td><?= number_format($row->price*$row->qty); ?></td>
+</tr>
+			<?php
+		}
+	}
+
+	public function save_item() {
+		$data=array(
+			'no_invoice' => $this->input->post('no_invoice',true),
+			'item' => $this->input->post('item',true),
+			'qty' => $this->input->post('qty',true),
+			'price' => $this->input->post('price',true)
+		);
+
+		$this->Model_ci->insert('tb_item',$data);
+		echo "berhasil";
+	}
+
+	public function del_item() {
+		$id=$this->input->post('id_item',true);
+		$this->Model_ci->delete('tb_item',array('id'=>$id));
+		echo "berhasil";
+	}
+
 	public function autoid(){
 			$max=$this->Model_ci->maxdata('no_urut','tb_invoice');
 			$result=$max->row();
@@ -51,7 +91,8 @@ class Invoice extends CI_Controller {
 					$id="0000".$lastid;
 				} else if (strlen($lastid)=='2') {
 					$id="000".$lastid;
-				} else if (strlen($lastid)=='3') {
+				} else if
+				 (strlen($lastid)=='3') {
 					$id="00".$lastid;
 				} else if (strlen($id)=='4') {
 					$id="0".$lastid;
