@@ -130,6 +130,41 @@ class Invoice extends CI_Controller {
 		echo "berhasil";
 	}
 
+	public function cetak() {
+		$no_invoice=rawurlencode($this->input->post('no_invoice',true));
+		echo "<embed src='".site_url('invoice/inv/'.$no_invoice)."' width='100%' style='height: 500px;' type='application/pdf'>";
+
+	}
+
+	public function inv() {
+		$this->load->library('pdf');
+		// $no_invoice=rawurldecode(($this->uri->segment(3));
+		$no_invoice="00003/DIV-IT/XII/2020";
+		//ambil data invoice
+		$inv=$this->Model_ci->get_where('tb_invoice',array('no_invoice'=>$no_invoice))->row();
+		$data['no_invoice']=$inv->no_invoice;
+		$data['kode_project']=$inv->kode_project;
+		$data['date']=$inv->date;
+		$data['payment_type']=$inv->payment_type;
+		$data['due_date']=$inv->due_date;
+		$data['kepada']=$inv->kepada;
+		$data['note']=$inv->note;
+		$data['is_paid']=$inv->is_paid;
+		$user=$this->Model_ci->get_where('tb_user',array('id_user'=>$inv->id_user))->row();
+		$data['user']=$user->nama;
+
+		//ambil data item invoice
+		$data['item']=$this->Model_ci->get_where('tb_item',array('no_invoice'=>$no_invoice));
+		
+
+		//pdf
+		$this->pdf->setPaper('A4', 'potrait');
+    	$this->pdf->filename = "invoice.pdf";
+    	$this->pdf->load_view('cetak_inv', $data);
+
+
+	}
+
 	public function autoid(){
 			$max=$this->Model_ci->maxdata('no_urut','tb_invoice');
 			$result=$max->row();
