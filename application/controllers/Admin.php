@@ -46,5 +46,14 @@ class Admin extends CI_Controller {
 		$this->_crud_output($data);
 	}
 
+	public function divisi() {
+		$crud= new grocery_CRUD();
+		$crud->set_table('tb_divisi');
+		$crud->set_subject('Divisi');
+		$data['judul']="Manajemen Divisi";
+		$data['output']=$crud->render();
+		$this->_crud_output($data);
+	}
+
 
 }

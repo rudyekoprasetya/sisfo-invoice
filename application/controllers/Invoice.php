@@ -4,7 +4,7 @@ class Invoice extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct();
-		if(!$this->session->userdata('logged_in')) {redirect('login','refresh');}//user harus login
+		// if(!$this->session->userdata('logged_in')) {redirect('login','refresh');}//user harus login
 		$this->load->model('Model_ci');
 
 	}
@@ -13,12 +13,14 @@ class Invoice extends CI_Controller {
 		$data['judul']="Generate Invoice";
 		$id_user=$this->session->userdata('id_user');
 		$no_urut=$this->autoid();
+		$data['divisi']=$this->Model_ci->get_all('tb_divisi');
 		$bulan=date('m');
 		$tahun=date('Y');
 		$roman=$this->numberToRoman($bulan);
 		$data['no_urut']=$no_urut;
-		$data['invoice']=$this->Model_ci->get_where_order('tb_invoice','no_urut','DESC',array('id_user'=>$id_user));
-		$data['no_invoice']=$no_urut."/DIV-IT/".$roman."/".$tahun;
+		// $data['invoice']=$this->Model_ci->get_where_order('tb_invoice','no_urut','DESC',array('id_user'=>$id_user));
+		$data['invoice']=$this->Model_ci->viewinvoice($id_user);
+		$data['no_invoice']=$no_urut."/CV-NMM/".$roman."/".$tahun;
 		$this->template->display('create_invoice',$data);
 	}
 
@@ -26,6 +28,7 @@ class Invoice extends CI_Controller {
 		$data=array(
 			'no_urut'=>$this->input->post('no_urut',true),
 			'no_invoice'=>$this->input->post('no_invoice',true),
+			'id_divisi'=>$this->input->post('id_divisi',true),
 			'kode_project'=>$this->input->post('kode_project',true),
 			'id_user'=>$this->session->userdata('id_user'),
 			'payment_type'=>$this->input->post('payment_type',true),
@@ -50,6 +53,7 @@ class Invoice extends CI_Controller {
 		$data=array(
 			'no_urut'=>$this->input->post('no_urut',true),
 			'kode_project'=>$this->input->post('kode_project',true),
+			'id_divisi'=>$this->input->post('id_divisi',true),
 			'id_user'=>$this->session->userdata('id_user'),
 			'payment_type'=>$this->input->post('payment_type',true),
 			'due_date'=>$this->input->post('due_date',true),
@@ -66,6 +70,7 @@ class Invoice extends CI_Controller {
 	public function editData() {
 		$no_invoice=$this->input->post('no_invoice',true);
 		$data=$this->Model_ci->get_where('tb_invoice',array('no_invoice'=>$no_invoice))->row();
+		$divisi=$this->Model_ci->get_all('tb_divisi');
 		if (!(strcmp($data->is_paid,"yes"))) {
 	      	$paid="selected";
 	      	$unpaid="";
@@ -77,6 +82,12 @@ class Invoice extends CI_Controller {
 		<label>No Invoice</label>
 		<input type="text" class="form-control" id="no_invoice" name="no_invoice" value="<?= $data->no_invoice; ?>" readonly>		
 		<input type="hidden" name="no_urut" value="<?= $data->no_urut; ?>">
+		<label>Division</label>
+		<select name="id_divisi" id="id_divisi" class="form-control">
+			<?php foreach($divisi->result() as $row) { ?>
+				<option value="<?= $row->id_divisi;?>"><?= $row->divisi; ?></option>
+			<?php } ?>
+		</select>
 		<label>To</label>
 		<input type="text" name="kepada" class="form-control" id="kepada" value="<?= $data->kepada; ?>" required>
 		<input type="hidden" name="kode_project" id="kode_project" value="<?= $data->kode_project; ?>">
@@ -142,6 +153,7 @@ class Invoice extends CI_Controller {
 		$no_invoice="00003/DIV-IT/XII/2020";
 		//ambil data invoice
 		$inv=$this->Model_ci->get_where('tb_invoice',array('no_invoice'=>$no_invoice))->row();
+		$no_urut=$inv->no_urut;
 		$data['no_invoice']=$inv->no_invoice;
 		$data['kode_project']=$inv->kode_project;
 		$data['date']=$inv->date;
@@ -155,11 +167,14 @@ class Invoice extends CI_Controller {
 
 		//ambil data item invoice
 		$data['item']=$this->Model_ci->get_where('tb_item',array('no_invoice'=>$no_invoice));
+
+		//ambil data lembaga
+		$lembaga=$this->Model_ci->get_all('tb_lembaga');
 		
 
 		//pdf
 		$this->pdf->setPaper('A4', 'potrait');
-    	$this->pdf->filename = "invoice.pdf";
+    	$this->pdf->filename = "inv-".$no_urut.".pdf";
     	$this->pdf->load_view('cetak_inv', $data);
 
 

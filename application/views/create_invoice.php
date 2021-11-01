@@ -28,6 +28,7 @@
           		<tr>
           			<th>No</th>
           			<th>Invoice</th>
+          			<th>Division</th>
           			<th>To</th>
           			<th>Date</th>
           			<th>Desc</th>
@@ -44,6 +45,7 @@ $no++;
           		<tr>
           			<td><?= $no; ?></td>
           			<td><?= $row->no_invoice;?></td>
+          			<td><?= $row->divisi;?></td>
           			<td><?= $row->kepada;?></td>
           			<td><?= $row->date;?></td>
           			<td><?= $row->payment_type;?></td>
@@ -78,6 +80,12 @@ $no++;
         <label>No Invoice</label>
 		<input type="text" class="form-control" id="no_invoice" name="no_invoice" value="<?= $no_invoice; ?>">		
 		<input type="hidden" name="no_urut" value="<?= $no_urut; ?>">
+		<label>Division</label>
+		<select name="id_divisi" id="id_divisi" class="form-control">
+			<?php foreach($divisi->result() as $row) { ?>
+				<option value="<?= $row->id_divisi;?>"><?= $row->divisi; ?></option>
+			<?php } ?>
+		</select>
 		<label>To</label>
 		<input type="text" name="kepada" class="form-control" id="kepada" onkeyup="ProjectID()" required>
 		<input type="hidden" name="kode_project" id="kode_project">

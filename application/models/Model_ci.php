@@ -6,6 +6,11 @@ class Model_ci extends CI_Model {
 		 parent:: __construct();
 	}
 
+	public function viewinvoice($user) {
+		$query="SELECT a.no_invoice, a.no_urut, a.kepada, a.date, a.due_date, a.payment_type, a.is_paid, b.divisi FROM tb_invoice a JOIN tb_divisi b ON a.id_divisi=b.id_divisi WHERE a.id_user='$user' ORDER BY a.date DESC ";
+		return $this->db->query($query);
+	}
+
 	public function cek($user,$pass) { 
 		 $this->db->where('username',$user);
 		 $this->db->where('password',$pass);
