@@ -56,7 +56,7 @@ $no++;
           				echo "<font color='red'>UNPAID</font>";
           			}
           			?></td>
-          			<td><a href="#" class="btn btn-info btn-small" data-toggle="modal" data-target="#myModalItem" onclick="Item('<?= $row->no_invoice; ?>')"><i class="fa fa-tags"></i></a> | <a href="#" class="btn btn-success btn-small"><i class="fa fa-print"></i></a> | <a href="#" class="btn btn-warning btn-small" data-toggle="modal" data-target="#myModalEdit" onclick="editData('<?= $row->no_invoice; ?>')"><i class="fa fa-pencil"></i></a> | <a href="<?= site_url('invoice/delData/'.$row->no_urut); ?>" class="btn btn-danger btn-small" onclick="return confirm('Yakin Akan menghapus?')"><i class="fa fa-ban"></i></a></td>
+          			<td><a href="#" class="btn btn-info btn-small" data-toggle="modal" data-target="#myModalItem" onclick="Item('<?= $row->no_invoice; ?>')"><i class="fa fa-tags"></i></a> | <a href="#" class="btn btn-success btn-small" data-toggle="modal" data-target="#myModalCetak"><i class="fa fa-print"></i></a> | <a href="#" class="btn btn-warning btn-small" data-toggle="modal" data-target="#myModalEdit" onclick="editData('<?= $row->no_invoice; ?>')"><i class="fa fa-pencil"></i></a> | <a href="<?= site_url('invoice/delData/'.$row->no_urut); ?>" class="btn btn-danger btn-small" onclick="return confirm('Yakin Akan menghapus?')"><i class="fa fa-ban"></i></a></td>
           		</tr>
 <?php } ?>
           	</tbody>
@@ -66,6 +66,25 @@ $no++;
   </div>
 </div>
 
+<!-- Modal cetak -->
+<div class="modal fade" id="myModalCetak" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document" style="width: 80%;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Cetak Invoice</h4>
+      </div>
+      <div class="modal-body" id="tempat-file">
+
+      </div>
+      <div class='modal-footer'>
+        <button type='button' class='btn btn-default' data-dismiss='modal'>Tutup</button>
+	  </div>
+	  </form>
+  </div>
+ </div>
+</div>
+<!-- Modal cetak -->
 
 <!-- Modal Add data -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

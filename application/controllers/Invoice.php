@@ -110,6 +110,7 @@ class Invoice extends CI_Controller {
 	public function get_item() {
 		$no_invoice=$this->input->post('no_invoice',true);
 		$data=$this->Model_ci->get_where('tb_item',array('no_invoice'=>$no_invoice));
+		$total=0;
 		foreach ($data->result() as $row) {
 			?>
 <tr>
@@ -120,7 +121,14 @@ class Invoice extends CI_Controller {
 	<td><?= number_format($row->price*$row->qty); ?></td>
 </tr>
 			<?php
+			$total=$total+($row->price*$row->qty);
 		}
+		?>
+	<tr>
+	<th colspan="4">Total</th>
+	<th><?= number_format($total); ?></th>	
+	</tr>
+		<?php
 	}
 
 	public function save_item() {
