@@ -151,7 +151,7 @@ class Invoice extends CI_Controller {
 
 	public function cetak() {
 		$no_invoice=rawurlencode($this->input->post('no_invoice',true));
-		echo "<embed src='".site_url('invoice/inv/'.$no_invoice)."' width='100%' style='height: 500px;' type='application/pdf'>";
+		echo "<embed src='".site_url('invoice/inv/'.$no_invoice)."' width='100%' height='100%' type='application/pdf'>";
 
 	}
 
